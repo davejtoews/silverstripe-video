@@ -13,7 +13,7 @@ class Video extends File implements Flushable
 {
     protected static $flush = false;
 
-    private static $backend = "FFmpeg";
+    private static $backend = FFmpeg::class;
     private static $formats = array(
         'mp4' => 'video/mp4;codecs="avc1.42E01E, mp4a.40.2"',
         'webm' => 'video/webm;codecs="vp8, vorbis"',

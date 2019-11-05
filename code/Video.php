@@ -52,7 +52,7 @@ class Video extends File implements Flushable
         $path = $this->Filename;
         $dir = dirname($path);
         $base = basename($path);
-        $placeholdername = $dir . '/_resampled/' . $base . '.png';
+        $placeholdername = $dir . '/public/_resampled/' . $base . '.png';
         $fullname = Director::baseFolder() . DIRECTORY_SEPARATOR . $placeholdername;
         if (!file_exists($fullname)) {
             $this->getBackend()->generateImage($fullname);
@@ -76,7 +76,7 @@ class Video extends File implements Flushable
         return isset($types[$ext]) ? $types[$ext] : 'unknown video format';
     }
 
-    public function getVersions()
+    public function Versions()
     {
         $versions = array();
         foreach ($this->config()->get('formats') as $format => $codec) {
@@ -92,7 +92,7 @@ class Video extends File implements Flushable
         $path = $this->Filename;
         $dir = dirname($path);
         $base = basename($path);
-        $cachename = $dir . '/_resampled/' . $base . '.' . $format;
+        $cachename = $dir . '/public/_resampled/' . $base . '.' . $format;
         $fullname = Director::baseFolder() . DIRECTORY_SEPARATOR . $cachename;
         if (!file_exists($fullname) || self::$flush) {
             $this->getBackend()->generateFormat($fullname);
@@ -208,12 +208,12 @@ class Video extends File implements Flushable
         $path = $this->Filename;
         $dir = dirname($this->Filename);
         $base = basename($this->Filename);
-        if (file_exists(Director::baseFolder() . DIRECTORY_SEPARATOR . dirname($this->Filename) . '/_resampled/' . basename($this->Filename) . '.png')) {
+        if (file_exists(Director::baseFolder() . DIRECTORY_SEPARATOR . dirname($this->Filename) . '/public/_resampled/' . basename($this->Filename) . '.png')) {
             $this->PlaceholderImage->delete();
         }
 
         foreach ($this->config()->get('formats') as $format => $codec) {
-            $cachename = dirname($this->Filename) . '/_resampled/' . basename($this->Filename) . '.' . $format;
+            $cachename = dirname($this->Filename) . '/public/_resampled/' . basename($this->Filename) . '.' . $format;
             $fullname = Director::baseFolder() . DIRECTORY_SEPARATOR . $cachename;
             if (file_exists($fullname)) {
                 unlink($fullname);

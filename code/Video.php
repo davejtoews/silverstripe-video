@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\Assets\File;
+use SilverStripe\Core\Flushable;
+
 /**
  * Represents a Video
  */

@@ -1,5 +1,7 @@
 <?php
 
+namespace Smindel\SilverstripeVideo;
+
 interface Video_Backend
 {
     public function generateImage($filename, $width = null, $height = null, $offset = 1);

@@ -1,0 +1,8 @@
+{
+    "name": "sminmdel/silverstripe-video",
+    "description": "Adds a video as a file type, creates mp4, webm, and ogv versions and a poster of the video through ffmpeg",
+    "type": "silverstripe-vendormodule",
+    "require": {
+        "silverstripe/framework": "^4.0.0"
+    }
+}

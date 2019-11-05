@@ -1,5 +1,7 @@
 <?php
 
+namespace Smindel\SilverstripeVideo;
+
 use SilverStripe\Assets\File;
 use SilverStripe\Core\Flushable;
 

@@ -2,7 +2,9 @@
 
 namespace Smindel\SilverstripeVideo;
 
-class FFmpeg extends Object implements Video_Backend
+use SilverStripe\ORM\DataObject;
+
+class FFmpeg extends DataObject implements Video_Backend
 {
     // setup the FFMPEG backup in your mysite/_config/config.yml
     private static $ffmpeg_path = '/usr/bin/ffmpeg';    // path to ffmpeg binary
@@ -15,7 +17,7 @@ class FFmpeg extends Object implements Video_Backend
 
     protected $original_video_name;
 
-	public function __construct($filename)
+	public function __construct()
     {
         $this->original_video_name = $filename;
     }

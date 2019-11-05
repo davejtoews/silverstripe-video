@@ -3,21 +3,22 @@
 namespace Smindel\SilverstripeVideo;
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
 
 class FFmpeg extends DataObject implements Video_Backend
 {
     // setup the FFMPEG backup in your mysite/_config/config.yml
     private static $ffmpeg_path = '/usr/bin/ffmpeg';    // path to ffmpeg binary
-                                                        // if you don't have ffmpeg installed, you can
-                                                        // download static builds to the thirdparty folder
+    // if you don't have ffmpeg installed, you can
+    // download static builds to the thirdparty folder
     private static $log_file = '.ffmpeg.log';           // log file name, path relative to assets folder
     private static $log_level = 0;                      // 0 = log nothing,
-                                                        // 1 = command and return code
-                                                        // 2 = verbose
+    // 1 = command and return code
+    // 2 = verbose
 
     protected $original_video_name;
 
-	public function __construct()
+    public function setFilename($filename)
     {
         $this->original_video_name = $filename;
     }
@@ -54,7 +55,7 @@ class FFmpeg extends DataObject implements Video_Backend
             'b:a' => '96k',
         );
 
-        if ($width && $height) $output_options['s'] = ((int)$width) . 'x' . ((int)$height);
+        if ($width && $height) $output_options['s'] = ((int) $width) . 'x' . ((int) $height);
 
         $this->run($this->original_video_name, array('y' => null), $filename, $output_options);
     }
@@ -63,7 +64,7 @@ class FFmpeg extends DataObject implements Video_Backend
     {
         $filename = $filename ?: $this->original_video_name;
         $output = $this->run($filename);
-        $duration = _t('Video.DURATION_UNKNOWN','unknown');
+        $duration = _t('Video.DURATION_UNKNOWN', 'unknown');
         foreach ($output as $line) {
             if (preg_match('/^\s*Duration:\s*(\d+:\d+:\d+\.\d+)/', $line, $matches)) $duration = $matches[1];
         }
@@ -106,5 +107,6 @@ class FFmpeg extends DataObject implements Video_Backend
         DB::alteration_message($output[0], $return == 1 ? 'created' : 'error');
     }
 
-    public function onBeforeDelete() {}
+    public function onBeforeDelete()
+    { }
 }

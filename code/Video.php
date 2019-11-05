@@ -3,7 +3,13 @@
 namespace Smindel\SilverstripeVideo;
 
 use SilverStripe\Assets\File;
+use SilverStripe\Assets\Image;
+use SilverStripe\Control\Director;
 use SilverStripe\Core\Flushable;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\View\ArrayData;
 
 /**
  * Represents a Video
@@ -51,17 +57,14 @@ class Video extends File implements Flushable
         if (!file_exists($fullname)) {
             $this->getBackend()->generateImage($fullname);
         }
-        return Image_Cached::create(
-            $placeholdername,
-            false,
-            Image::create(array(
-                'Filename' => $this->Filename,
-                'ParentID' => $this->ParentID,
-            ))
-        );
+        return Image::create(array(
+            'Filename' => $this->Filename,
+            'ParentID' => $this->ParentID,
+        ));
     }
 
-    public function getFileType() {
+    public function getFileType()
+    {
         $types = array(
             'mp4' => _t('Video.Mp4Type', 'MP4 video'),
             'ogv' => _t('Video.OgvType', 'OGV video'),
@@ -102,9 +105,9 @@ class Video extends File implements Flushable
 
     public function getBackend()
     {
-        return Injector::inst()->createWithArgs(self::config()->backend, array(
-            $this->getFullPath()
-        ));
+        $backend = Injector::inst()->createWithArgs(self::config()->backend, []);
+        $backend->setFilename($this->getFilename());
+        return $backend;
     }
 
     public static function flush()
@@ -148,25 +151,59 @@ class Video extends File implements Flushable
         $meta = $preview->fieldByName('FilePreviewData');
         $image = $preview->fieldByName('FilePreviewImage')->fieldByName('ImageFull');
 
-        $meta->FieldList()->First()->unshift(ReadonlyField::create("Duration", _t('Video.DURATION','Duration') . ':'));
-        $image->setContent($this->setSize(160,120)->controls()->getTag());
+        $meta->FieldList()->First()->unshift(ReadonlyField::create("Duration", _t('Video.DURATION', 'Duration') . ':'));
+        $image->setContent($this->setSize(160, 120)->controls()->getTag());
 
         return $fields;
     }
 
-    public function controls() { $this->setAttribute('controls', true); return $this; }
-    public function autoplay() { $this->setAttribute('autoplay', true); return $this; }
-    public function loop()     { $this->setAttribute('loop',     true); return $this; }
-    public function muted()    { $this->setAttribute('muted',    true); return $this; }
-    public function setWidth($width) { $this->setAttribute('width', $width); return $this; }
-    public function setHeight($height) { $this->setAttribute('height', $height); return $this; }
-    public function setSize($width, $height) { $this->setAttribute('width', $width); $this->setAttribute('height', $height); return $this; }
-    public function poster()   { $this->setAttribute('poster',   $this->PlaceholderImage->Filename); return $this; }
+    public function controls()
+    {
+        $this->setAttribute('controls', true);
+        return $this;
+    }
+    public function autoplay()
+    {
+        $this->setAttribute('autoplay', true);
+        return $this;
+    }
+    public function loop()
+    {
+        $this->setAttribute('loop',     true);
+        return $this;
+    }
+    public function muted()
+    {
+        $this->setAttribute('muted',    true);
+        return $this;
+    }
+    public function setWidth($width)
+    {
+        $this->setAttribute('width', $width);
+        return $this;
+    }
+    public function setHeight($height)
+    {
+        $this->setAttribute('height', $height);
+        return $this;
+    }
+    public function setSize($width, $height)
+    {
+        $this->setAttribute('width', $width);
+        $this->setAttribute('height', $height);
+        return $this;
+    }
+    public function poster()
+    {
+        $this->setAttribute('poster',   $this->PlaceholderImage->Filename);
+        return $this;
+    }
 
 
 
-    public function deleteCachedFiles() {
-        if(!$this->Filename) return;
+    public function deleteCachedFiles()
+    {
+        if (!$this->Filename) return;
 
         $path = $this->Filename;
         $dir = dirname($this->Filename);

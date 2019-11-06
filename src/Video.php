@@ -2,8 +2,8 @@
 
 namespace Smindel\SilverstripeVideo;
 
+use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
-use SilverStripe\Assets\Storage\DBFile;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
@@ -15,7 +15,7 @@ use SilverStripe\View\ArrayData;
  * Represents a Video
  */
 
-class Video extends DBFile implements Flushable
+class Video extends File implements Flushable
 {
     protected static $flush = false;
 
